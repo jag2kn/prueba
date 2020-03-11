@@ -2,36 +2,19 @@
 
 /*
 |--------------------------------------------------------------------------
-| Application Routes
+| Web Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register all of the routes for an application.
-| It is a breeze. Simply tell Lumen the URIs it should respond to
-| and give it the Closure to call when that URI is requested.
+| Here is where the routes are registered for our application.
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
+// Named route required for SendsPasswordResetEmails.
+Route::get('reset-password', function() {
+    return view('index');
+})->name('password.reset');
 
-
-$router->group(['prefix' => 'api/'], function ($app) {
-    $app->get('login/','UserController@authenticate');
-    
-    $app->post('user/','UserController@store');
-    $app->get('user/', 'UserController@index');
-    $app->get('user/{id}','UserController@show');
-    $app->put('user/{id}/', 'UserController@update');
-    $app->delete('user/{id}/', 'UserController@destroy');
-    
-    $app->post('cert/','CertController@store');
-    $app->get('cert/', 'CertController@index');
-    $app->get('cert/{id}/', 'CertController@show');
-    $app->put('cert/{id}/', 'CertController@update');
-    $app->delete('cert/{id}/', 'CertController@destroy');
-});
-
-
-
-
+// Catches all other web routes.
+Route::get('{slug}', function () {
+    return view('index');
+})->where('slug', '^(?!api).*$');

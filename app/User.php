@@ -2,15 +2,16 @@
 
 namespace App;
 
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Database\Eloquent\Model;
-use Laravel\Lumen\Auth\Authorizable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use App\Notifications\ResetPassword as ResetPasswordNotification;
+use App\Custom\Hasher;
+use App\Todo;
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract
+class User extends Authenticatable implements JWTSubject
 {
-    use Authenticatable, Authorizable;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -18,23 +19,85 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'document', 'documentType', 'licenceNumber'
+        'name', 'email', 'password'
     ];
 
     /**
-     * The attributes excluded from the model's JSON form.
+     * The attributes that should be hidden for arrays.
      *
      * @var array
      */
     protected $hidden = [
-        'password', 'api_key'
+        'password', 'remember_token',
     ];
-    /*
-    * Get Todo of User
-    *
-    */
-    public function todo()
+
+    /**
+     * Custom attributes for data model.
+     *
+     * @var array
+     */
+    public $appends = ['hashid'];
+
+    /**
+     * A User can have multiple Todos.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function todos()
     {
-        return $this->hasMany('App\Cert','user_id');
+        return $this->hasMany(Todo::class);
+    }
+
+    /**
+     * Encodes the user id and returns the unique hash.
+     *
+     * @return string Hashid
+     */
+    public function hashid()
+    {
+        return Hasher::encode($this->id);
+    }
+
+    /**
+     * Returns the hashid for a custom attribute.
+     *
+     * @return string Hashid
+     */
+    public function getHashidAttribute()
+    {
+        return $this->hashid();
+    }
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
+
+    /**
+     * Allows us to customize the password notification email.
+     * See: App/Notifications/ResetPassword.php
+     *
+     * @param string
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $email = $this->getEmailForPasswordReset();
+        $user = $this::where('email', $email)->first();
+        $this->notify(new ResetPasswordNotification($token, $user->id));
     }
 }
