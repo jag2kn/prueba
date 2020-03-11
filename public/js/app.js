@@ -63716,7 +63716,9 @@ function (_Component) {
         className: "logo my-0 font-weight-normal h4"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
         to: "/"
-      }, "Laravel React")), this.props.isAuthenticated && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+        src: "/imgs/logo.png"
+      }))), this.props.isAuthenticated && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "navigation d-flex justify-content-end"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Nav"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["NavItem"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["NavLink"], {
         tag: react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"],
@@ -64646,13 +64648,11 @@ function (_Component) {
         className: "row"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "section-about col-lg-6 mb-4 mb-lg-0"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "Example To Do App"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Built with Laravel and React. Includes JWT auth, registration, login, routing and tests.", " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "https://wptheming.com/2019/02/building-a-react-app-on-laravel/"
-      }, "Learn more"), "."), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "https://github.com/devinsays/laravel-react-bootstrap"
-      }, "Source code and documentation on GitHub.")))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+        src: "/imgs/logo.png"
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "Centro de ense\xF1anza automovilistica"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "P\xE1gina de administraci\xF3n de certificados"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "section-login col-lg-6"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", null, "Log in to the App"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", null, "Ingreso a la aplicaci\xF3n"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card-login card mb-3"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card-body"
@@ -64666,18 +64666,18 @@ function (_Component) {
       }, response.error && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "alert alert-danger",
         role: "alert"
-      }, "Credentials were incorrect. Try again!"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, "Usuario o clave incorrecto, intente de nuevo"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-group"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         htmlFor: "email"
-      }, "Email Address"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      }, "Correo electr\xF3nico"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         id: "email",
         type: "email",
         name: "email",
         className: classnames__WEBPACK_IMPORTED_MODULE_5___default()("form-control", {
           "is-invalid": "email" in errors
         }),
-        placeholder: "Enter email",
+        placeholder: "Ingrese el correo",
         required: true,
         onChange: this.handleChange,
         onBlur: this.handleBlur,
@@ -64688,14 +64688,14 @@ function (_Component) {
         className: "form-group"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         htmlFor: "password"
-      }, "Password"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      }, "Clave"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         id: "password",
         type: "password",
         className: classnames__WEBPACK_IMPORTED_MODULE_5___default()("form-control", {
           "is-invalid": "password" in errors
         }),
         name: "password",
-        placeholder: "Enter password",
+        placeholder: "Ingrese la clave",
         required: true,
         onChange: this.handleChange,
         onBlur: this.handleBlur,
@@ -64709,15 +64709,11 @@ function (_Component) {
         className: classnames__WEBPACK_IMPORTED_MODULE_5___default()("btn btn-primary", {
           "btn-loading": loading
         })
-      }, "Sign In")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "login-invite-text text-center"
-      }, "Don't have an account?", " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
-        to: "/register"
-      }, "Register"), ".")))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, "Ingresar"))))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "password-reset-link text-center"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
         to: "/forgot-password"
-      }, "Forgot Your Password?")))))));
+      }, "\xBFOlvid\xF3 su clave?")))))));
     }
   }]);
 

@@ -109,24 +109,15 @@ class Home extends Component {
             <div className="row">
               <div className="section-about col-lg-6 mb-4 mb-lg-0">
                 <div>
-                  <h2>Example To Do App</h2>
+                  <img src="/imgs/logo.png"/>
+                  <h2>Centro de enseñanza automovilistica</h2>
                   <p>
-                    Built with Laravel and React. Includes JWT auth,
-                    registration, login, routing and tests.{" "}
-                    <a href="https://wptheming.com/2019/02/building-a-react-app-on-laravel/">
-                      Learn more
-                    </a>
-                    .
-                  </p>
-                  <p>
-                    <a href="https://github.com/devinsays/laravel-react-bootstrap">
-                      Source code and documentation on GitHub.
-                    </a>
+                    Página de administración de certificados
                   </p>
                 </div>
               </div>
               <div className="section-login col-lg-6">
-                <h4>Log in to the App</h4>
+                <h4>Ingreso a la aplicación</h4>
 
                 <div className="card-login card mb-3">
                   <div className="card-body">
@@ -140,12 +131,12 @@ class Home extends Component {
                     >
                       {response.error && (
                         <div className="alert alert-danger" role="alert">
-                          Credentials were incorrect. Try again!
+                          Usuario o clave incorrecto, intente de nuevo
                         </div>
                       )}
 
                       <div className="form-group">
-                        <label htmlFor="email">Email Address</label>
+                        <label htmlFor="email">Correo electrónico</label>
                         <input
                           id="email"
                           type="email"
@@ -153,7 +144,7 @@ class Home extends Component {
                           className={classNames("form-control", {
                             "is-invalid": "email" in errors
                           })}
-                          placeholder="Enter email"
+                          placeholder="Ingrese el correo"
                           required
                           onChange={this.handleChange}
                           onBlur={this.handleBlur}
@@ -166,7 +157,7 @@ class Home extends Component {
                       </div>
 
                       <div className="form-group">
-                        <label htmlFor="password">Password</label>
+                        <label htmlFor="password">Clave</label>
                         <input
                           id="password"
                           type="password"
@@ -174,7 +165,7 @@ class Home extends Component {
                             "is-invalid": "password" in errors
                           })}
                           name="password"
-                          placeholder="Enter password"
+                          placeholder="Ingrese la clave"
                           required
                           onChange={this.handleChange}
                           onBlur={this.handleBlur}
@@ -194,20 +185,20 @@ class Home extends Component {
                             "btn-loading": loading
                           })}
                         >
-                          Sign In
+                          Ingresar
                         </button>
                       </div>
 
-                      <div className="login-invite-text text-center">
+                      {/*<div className="login-invite-text text-center">
                         {"Don't have an account?"}{" "}
                         <Link to="/register">Register</Link>.
-                      </div>
+                      </div>*/}
                     </form>
                   </div>
                 </div>
 
                 <div className="password-reset-link text-center">
-                  <Link to="/forgot-password">Forgot Your Password?</Link>
+                  <Link to="/forgot-password">¿Olvidó su clave?</Link>
                 </div>
               </div>
             </div>
