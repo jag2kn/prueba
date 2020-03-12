@@ -5,19 +5,16 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\User;
 
-class Todo extends Model
+class Cert extends Model
 {
     /**
      * The attributes that are mass assignable.
      *
      * @var array
-     */
-    protected $fillable = [
-        'value',
-        'status',
-        'user_id'
-    ];
-
+     */    
+    protected $fillable = ['number','course','startDate', 'endDate', 'city', 'user_id', 'status'];
+    
+    
     /**
      * The attributes that should be casted to native types.
      *

@@ -13,9 +13,9 @@ class UserSeeder extends Seeder
     {
         // Create primary user account for testing.
         User::create([
-            'name' => 'User Test',
-            'email' => 'user@test.dev',
-            'password' => bcrypt('password')
+            'name' => 'Jorge González',
+            'email' => 'jag2kn@gmail.com',
+            'password' => bcrypt('123456789')
         ]);
 
         // Create another five user accounts.

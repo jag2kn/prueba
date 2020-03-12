@@ -28,7 +28,7 @@ Route::group([
 Route::group([
     'prefix' => 'v1'
 ], function ($router) {
-    Route::apiResource('todo', 'TodoController');
+    Route::apiResource('cert', 'CertController');
 });
 
 // Not Found

@@ -14,7 +14,7 @@ class Dashboard extends Component {
     };
 
     // API endpoint.
-    this.api = "/api/v1/todo";
+    this.api = "/api/v1/cert";
   }
 
   componentDidMount() {

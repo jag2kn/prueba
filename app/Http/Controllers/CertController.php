@@ -7,11 +7,11 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use App\Custom\Hasher;
 use App\Http\Controllers\APIController;
-use App\Http\Resources\TodoCollection;
-use App\Http\Resources\TodoResource;
-use App\Todo;
+use App\Http\Resources\CertCollection;
+use App\Http\Resources\CertResource;
+use App\Cert;
 
-class TodoController extends ApiController
+class CertController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -25,7 +25,7 @@ class TodoController extends ApiController
             return $this->responseUnauthorized();
         }
 
-        $collection = Todo::where('user_id', $user->id);
+        $collection = Cert::where('user_id', $user->id);
 
         // Check query string filters.
         if ($status = $request->query('status')) {
@@ -41,7 +41,7 @@ class TodoController extends ApiController
             $collection = $collection->appends('status', $status);
         }
 
-        return new TodoCollection($collection);
+        return new CertCollection($collection);
     }
 
     /**
@@ -59,7 +59,7 @@ class TodoController extends ApiController
 
         // Validate all the required parameters have been sent.
         $validator = Validator::make($request->all(), [
-            'value' => 'required',
+            'number' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -68,14 +68,14 @@ class TodoController extends ApiController
 
         // Warning: Data isn't being fully sanitized yet.
         try {
-            $todo = Todo::create([
+            $cert = Cert::create([
                 'user_id' => $user->id,
-                'value' => request('value'),
+                'number' => request('number'),
             ]);
             return response()->json([
                 'status' => 201,
                 'message' => 'Resource created.',
-                'id' => $todo->id
+                'id' => $cert->id
             ], 201);
         } catch (Exception $e) {
             return $this->responseServerError('Error creating resource.');
@@ -96,12 +96,12 @@ class TodoController extends ApiController
         }
 
         // User can only acccess their own data.
-        if ($todo->user_id === $user->id) {
+        if ($cert->user_id === $user->id) {
             return $this->responseUnauthorized();
         }
 
-        $todo = Todo::where('id', $id)->firstOrFail();
-        return new TodoResource($todo);
+        $cert = Cert::where('id', $id)->firstOrFail();
+        return new CertResource($cert);
     }
 
     /**
@@ -120,7 +120,7 @@ class TodoController extends ApiController
 
         // Validates data.
         $validator = Validator::make($request->all(), [
-            'value' => 'string',
+            'number' => 'string',
             'status' => 'in:closed,open',
         ]);
 
@@ -129,15 +129,15 @@ class TodoController extends ApiController
         }
 
         try {
-            $todo = Todo::where('id', $id)->firstOrFail();
-            if ($todo->user_id === $user->id) {
-                if (request('value')) {
-                    $todo->value = request('value');
+            $cert = Cert::where('id', $id)->firstOrFail();
+            if ($cert->user_id === $user->id) {
+                if (request('number')) {
+                    $cert->number = request('number');
                 }
                 if (request('status')) {
-                    $todo->status = request('status');
+                    $cert->status = request('status');
                 }
-                $todo->save();
+                $cert->save();
                 return $this->responseResourceUpdated();
             } else {
                 return $this->responseUnauthorized();
@@ -160,15 +160,15 @@ class TodoController extends ApiController
             return $this->responseUnauthorized();
         }
 
-        $todo = Todo::where('id', $id)->firstOrFail();
+        $cert = Cert::where('id', $id)->firstOrFail();
 
         // User can only delete their own data.
-        if ($todo->user_id !== $user->id) {
+        if ($cert->user_id !== $user->id) {
             return $this->responseUnauthorized();
         }
 
         try {
-            $todo->delete();
+            $cert->delete();
             return $this->responseResourceDeleted();
         } catch (Exception $e) {
             return $this->responseServerError('Error deleting resource.');

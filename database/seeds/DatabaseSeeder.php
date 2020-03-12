@@ -14,6 +14,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UserSeeder::class);
 
         // Create Todo data.
-        $this->call(TodoSeeder::class);
+        //$this->call(TodoSeeder::class);
     }
 }
