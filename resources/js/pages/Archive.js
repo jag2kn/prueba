@@ -16,7 +16,7 @@ class Archive extends Component {
     };
 
     // API Endpoint
-    this.api = "/api/v1/todo";
+    this.api = "/api/v1/cert";
   }
 
   componentDidMount() {
@@ -60,17 +60,17 @@ class Archive extends Component {
       });
   };
 
-  deleteTodo = e => {
+  deleteCert = e => {
     const { key } = e.target.dataset;
-    const { data: todos } = this.state;
+    const { data: certs } = this.state;
 
     Http.delete(`${this.api}/${key}`)
       .then(response => {
         if (response.status === 204) {
-          const index = todos.findIndex(
-            todo => parseInt(todo.id, 10) === parseInt(key, 10)
+          const index = certs.findIndex(
+            cert => parseInt(cert.id, 10) === parseInt(key, 10)
           );
-          const update = [...todos.slice(0, index), ...todos.slice(index + 1)];
+          const update = [...certs.slice(0, index), ...certs.slice(index + 1)];
           this.setState({ data: update });
         }
       })
@@ -81,7 +81,7 @@ class Archive extends Component {
 
   render() {
     const { loading, error, apiMore } = this.state;
-    const todos = Array.from(this.state.data);
+    const certs = Array.from(this.state.data);
 
     return (
       <div className="container py-5">
@@ -101,17 +101,17 @@ class Archive extends Component {
               <th>Status</th>
               <th>Action</th>
             </tr>
-            {todos.map(todo => (
-              <tr key={todo.id}>
-                <td>{todo.created_at}</td>
-                <td>{todo.value}</td>
-                <td>{todo.status}</td>
+            {certs.map(cert => (
+              <tr key={cert.id}>
+                <td>{cert.created_at}</td>
+                <td>{cert.value}</td>
+                <td>{cert.status}</td>
                 <td>
                   <button
                     type="button"
                     className="btn btn-secondary"
-                    onClick={this.deleteTodo}
-                    data-key={todo.id}
+                    onClick={this.deleteCert}
+                    data-key={cert.id}
                   >
                     Delete
                   </button>
