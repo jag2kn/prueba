@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use App\Http\Resources\ApiResouce;
 use App\Custom\Hasher;
 
-class TodoResource extends ApiResource
+class CertResource extends ApiResource
 {
     /**
      * Transform the resource into an array.
@@ -20,7 +20,11 @@ class TodoResource extends ApiResource
             'updated_at' => (string)$this->updated_at->toDateTimeString(),
             'id' => $this->id,
             'user' => Hasher::encode($this->user_id),
-            'value' => $this->value,
+            'number' => $this->number,
+            'course' => $this->course,
+            'startDate' => $this->startDate,
+            'endDate' => $this->endDate,
+            'city' => $this->city,
             'status' => $this->status,
         ];
     }

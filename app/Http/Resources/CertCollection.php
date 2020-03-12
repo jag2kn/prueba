@@ -2,11 +2,11 @@
 
 namespace App\Http\Resources;
 
-use App\Todo;
+use App\Cert;
 use App\Http\Resources\ApiResourceCollection;
-use App\Http\Resources\TodoResource;
+use App\Http\Resources\CertResource;
 
-class TodoCollection extends ApiResourceCollection
+class CertCollection extends ApiResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -16,9 +16,9 @@ class TodoCollection extends ApiResourceCollection
      */
     public function toArray($request)
     {
-        // Transforms the collection to match format in TodoResource.
-        $this->collection->transform(function (Todo $todo) {
-            return (new TodoResource($todo));
+        // Transforms the collection to match format in CertResource.
+        $this->collection->transform(function (Cert $cert) {
+            return (new CertResource($cert));
         });
 
         return parent::toArray($request);
