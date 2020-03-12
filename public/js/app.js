@@ -63837,15 +63837,15 @@ function (_Component) {
       });
     });
 
-    _defineProperty(_assertThisInitialized(_this), "deleteTodo", function (e) {
+    _defineProperty(_assertThisInitialized(_this), "deleteCert", function (e) {
       var key = e.target.dataset.key;
-      var todos = _this.state.data;
+      var certs = _this.state.data;
       _Http__WEBPACK_IMPORTED_MODULE_3__["default"]["delete"]("".concat(_this.api, "/").concat(key)).then(function (response) {
         if (response.status === 204) {
-          var index = todos.findIndex(function (todo) {
-            return parseInt(todo.id, 10) === parseInt(key, 10);
+          var index = certs.findIndex(function (cert) {
+            return parseInt(cert.id, 10) === parseInt(key, 10);
           });
-          var update = [].concat(_toConsumableArray(todos.slice(0, index)), _toConsumableArray(todos.slice(index + 1)));
+          var update = [].concat(_toConsumableArray(certs.slice(0, index)), _toConsumableArray(certs.slice(index + 1)));
 
           _this.setState({
             data: update
@@ -63864,7 +63864,7 @@ function (_Component) {
       error: false
     }; // API Endpoint
 
-    _this.api = "/api/v1/todo";
+    _this.api = "/api/v1/cert";
     return _this;
   }
 
@@ -63898,7 +63898,7 @@ function (_Component) {
           loading = _this$state.loading,
           error = _this$state.error,
           apiMore = _this$state.apiMore;
-      var todos = Array.from(this.state.data);
+      var certs = Array.from(this.state.data);
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "container py-5"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
@@ -63907,14 +63907,14 @@ function (_Component) {
         className: "text-center"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, error)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
         className: "table"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Time"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "To Do"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Status"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Action")), todos.map(function (todo) {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Time"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "To Do"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Status"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Action")), certs.map(function (cert) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
-          key: todo.id
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, todo.created_at), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, todo.value), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, todo.status), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          key: cert.id
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, cert.created_at), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, cert.value), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, cert.status), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           type: "button",
           className: "btn btn-secondary",
-          onClick: _this3.deleteTodo,
-          "data-key": todo.id
+          onClick: _this3.deleteCert,
+          "data-key": cert.id
         }, "Delete")));
       }))), apiMore && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "text-center"
@@ -64010,28 +64010,29 @@ function (_Component) {
 
     _defineProperty(_assertThisInitialized(_this), "handleSubmit", function (e) {
       e.preventDefault();
-      var todo = _this.state.todo;
+      var cert = _this.state.cert;
 
-      _this.addTodo(todo);
+      _this.addCert(cert);
     });
 
-    _defineProperty(_assertThisInitialized(_this), "addTodo", function (todo) {
+    _defineProperty(_assertThisInitialized(_this), "addCert", function (cert) {
+      console.log("Enviando el cert: ", cert);
       _Http__WEBPACK_IMPORTED_MODULE_2__["default"].post(_this.api, {
-        value: todo
+        number: cert
       }).then(function (_ref) {
         var data = _ref.data;
         var newItem = {
           id: data.id,
-          value: todo
+          number: cert
         };
-        var allTodos = [newItem].concat(_toConsumableArray(_this.state.data));
+        var allCerts = [newItem].concat(_toConsumableArray(_this.state.data));
 
         _this.setState({
-          data: allTodos,
-          todo: null
+          data: allCerts,
+          cert: null
         });
 
-        _this.todoForm.reset();
+        _this.certForm.reset();
       })["catch"](function () {
         _this.setState({
           error: "Sorry, there was an error saving your to do."
@@ -64039,18 +64040,18 @@ function (_Component) {
       });
     });
 
-    _defineProperty(_assertThisInitialized(_this), "closeTodo", function (e) {
+    _defineProperty(_assertThisInitialized(_this), "closeCert", function (e) {
       var key = e.target.dataset.key;
-      var todos = _this.state.data;
+      var certs = _this.state.data;
       _Http__WEBPACK_IMPORTED_MODULE_2__["default"].patch("".concat(_this.api, "/").concat(key), {
         status: "closed"
       }).then(function () {
-        var updatedTodos = todos.filter(function (todo) {
-          return todo.id !== parseInt(key, 10);
+        var updatedCerts = certs.filter(function (cert) {
+          return cert.id !== parseInt(key, 10);
         });
 
         _this.setState({
-          data: updatedTodos
+          data: updatedCerts
         });
       })["catch"](function () {
         _this.setState({
@@ -64060,12 +64061,12 @@ function (_Component) {
     });
 
     _this.state = {
-      todo: null,
+      cert: null,
       error: false,
       data: []
     }; // API endpoint.
 
-    _this.api = "/api/v1/todo";
+    _this.api = "/api/v1/cert";
     return _this;
   }
 
@@ -64098,47 +64099,97 @@ function (_Component) {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "container py-5"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "add-todos mb-5"
+        className: "add-certs mb-5"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
         className: "text-center mb-4"
-      }, "Add a To Do"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+      }, "Generar nuevo certificado"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
         method: "post",
         onSubmit: this.handleSubmit,
         ref: function ref(el) {
-          _this3.todoForm = el;
+          _this3.certForm = el;
         }
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-group"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-        htmlFor: "addTodo"
-      }, "Add a New To Do"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        htmlFor: "addCert"
+      }, "Nombres y apellidos"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "d-flex"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        id: "addTodo",
-        name: "todo",
+        id: "addCert",
+        name: "name",
         className: "form-control mr-3",
         placeholder: "Build a To Do app...",
         onChange: this.handleChange
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        htmlFor: "addCert"
+      }, "N\xFAmero"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "d-flex"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        id: "addCert",
+        name: "number",
+        className: "form-control mr-3",
+        placeholder: "Build a To Do app...",
+        onChange: this.handleChange
+      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        htmlFor: "addCert"
+      }, "N\xFAmero"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "d-flex"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        id: "addCert",
+        name: "number",
+        className: "form-control mr-3",
+        placeholder: "Build a To Do app...",
+        onChange: this.handleChange
+      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        htmlFor: "addCert"
+      }, "N\xFAmero"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "d-flex"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        id: "addCert",
+        name: "number",
+        className: "form-control mr-3",
+        placeholder: "Build a To Do app...",
+        onChange: this.handleChange
+      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        htmlFor: "addCert"
+      }, "N\xFAmero"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "d-flex"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        id: "addCert",
+        name: "number",
+        className: "form-control mr-3",
+        placeholder: "Build a To Do app...",
+        onChange: this.handleChange
+      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         type: "submit",
         className: "btn btn-primary"
-      }, "Add"))))), error && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, "CREAR")))), error && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "alert alert-warning",
         role: "alert"
       }, error), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "todos"
+        className: "certs"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
         className: "text-center mb-4"
       }, "Open To Dos"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
         className: "table table-striped"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "To Do"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Action")), data.map(function (todo) {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "To Do"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Action")), data.map(function (cert) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
-          key: todo.id
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, todo.value), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          key: cert.id
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, cert.number), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           type: "button",
           className: "btn btn-secondary",
-          onClick: _this3.closeTodo,
-          "data-key": todo.id
+          onClick: _this3.closeCert,
+          "data-key": cert.id
         }, "Close")));
       })))));
     }
