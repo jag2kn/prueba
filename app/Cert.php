@@ -12,7 +12,7 @@ class Cert extends Model
      *
      * @var array
      */    
-    protected $fillable = ['number','course','startDate', 'endDate', 'city', 'user_id', 'status'];
+    protected $fillable = ['name','document','number','course','startDate', 'endDate', 'city', 'status', 'user_id', 'code'];
     
     
     /**

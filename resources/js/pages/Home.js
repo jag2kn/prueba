@@ -197,9 +197,9 @@ class Home extends Component {
                   </div>
                 </div>
 
-                <div className="password-reset-link text-center">
+                {/* <div className="password-reset-link text-center">
                   <Link to="/forgot-password">¿Olvidó su clave?</Link>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

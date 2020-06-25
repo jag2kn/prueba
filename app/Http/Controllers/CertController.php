@@ -10,6 +10,25 @@ use App\Http\Controllers\APIController;
 use App\Http\Resources\CertCollection;
 use App\Http\Resources\CertResource;
 use App\Cert;
+use QrCode;
+
+function generateRandomString($length = 10) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+    return $randomString;
+}
+
+function getCourse($id){
+  $lista = [
+    "4959/06-1724/07" =>  "CURSO ESPECÍFICO EN TRÁNSITO Y SEGURIDAD VIAL PARA PERSONAL TÉCNICO Y/O AUXILIAR ACOMPAÑANTE DE CARGA EXTRADIMENSIONADA<br/>".
+                          "De acuerdo a las Resoluciones 4959/06 y 1724/07 de Mintransporte."
+  ];
+  return $lista[$id]; 
+}
 
 class CertController extends ApiController
 {
@@ -25,7 +44,7 @@ class CertController extends ApiController
             return $this->responseUnauthorized();
         }
 
-        $collection = Cert::where('user_id', $user->id);
+        $collection = Cert::with('user');
 
         // Check query string filters.
         if ($status = $request->query('status')) {
@@ -71,6 +90,13 @@ class CertController extends ApiController
             $cert = Cert::create([
                 'user_id' => $user->id,
                 'number' => request('number'),
+                'name' => request('name'),
+                'document' => request('document'),
+                'course' => request('course'),
+                'startDate' => request('startDate'),
+                'endDate' => request('endDate'),
+                'city' => request('city'),
+                'code' => generateRandomString(20),
             ]);
             return response()->json([
                 'status' => 201,
@@ -173,5 +199,34 @@ class CertController extends ApiController
         } catch (Exception $e) {
             return $this->responseServerError('Error deleting resource.');
         }
+    }
+    
+    /**
+     * Generate pdf
+     *
+     * @param  string  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function generatePDF(Request $request, $id)
+    {
+        $pdf = app('dompdf.wrapper');
+        $cert = Cert::where('code', $id)->first();
+        
+        QrCode::color(255, 0, 0);
+        
+        
+        $pdf->loadHTML(
+          '<div style="text-align:center;">'.
+            '<img src="'.base_path().'/public/imgs/logo.png" alt="Logo" height="150px">'.
+            '<h1>Centro de Enseñanza Automovilística FENIX BOGOTA,<br/>y EXCELSIOR SECURITAS LABORUM S.A.S.</h1>'.
+            '<h2>Certifican a:</h2>'.
+            '<h1>'.$cert->name.'</h1>'.
+            '<h1>'."CC ". $cert->document.'</h1>'.
+            '<h2>'.getCourse($cert->course).'</h2>'.
+            "<div>Curso tomado entre ".$cert->startDate." - ".$cert->endDate." en la ciudad de ".$cert->city."</div><br/>".
+            '<img src="data:image/png;base64, '.base64_encode(QrCode::format('png')->generate('Embed me into an e-mail!')).'"/>'.
+          '</div>'
+        )->setPaper('letter', 'landscape');
+        return $pdf->stream('cert.pdf');
     }
 }

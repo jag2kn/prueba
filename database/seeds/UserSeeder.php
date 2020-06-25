@@ -17,9 +17,15 @@ class UserSeeder extends Seeder
             'email' => 'jag2kn@gmail.com',
             'password' => bcrypt('123456789')
         ]);
+        
+        User::create([
+            'name' => 'Camilo Correal',
+            'email' => 'camilo.correal@dadosgroup.com',
+            'password' => bcrypt('123456789')
+        ]);
 
         // Create another five user accounts.
-        factory(User::class, 5)->create();
+        //factory(User::class, 5)->create();
 
         $this->command->info('Users table seeded.');
     }

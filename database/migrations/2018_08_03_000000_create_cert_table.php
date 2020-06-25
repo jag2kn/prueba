@@ -16,12 +16,15 @@ class CreateCertTable extends Migration
         Schema::create('certs', function (Blueprint $table) {
             $table->timestamps();
             $table->increments('id');
-            $table->integer('user_id');
+            $table->integer('user_id');            
+            $table->string('name');
+            $table->string('document');
             $table->string('number');
             $table->string('course');
             $table->date('startDate');
             $table->date('endDate');
             $table->string('city');
+            $table->string('code');
             $table->enum('status', ['open', 'closed'])->default('open');
         });
     }

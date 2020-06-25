@@ -63958,14 +63958,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Http */ "./resources/js/Http.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -64004,75 +63996,60 @@ function (_Component) {
       var _e$target = e.target,
           name = _e$target.name,
           value = _e$target.value;
+      var cert = _this.state.cert;
+      cert[name] = value;
 
-      _this.setState(_defineProperty({}, name, value));
+      _this.setState({
+        "cert": cert
+      }, function () {
+        console.log("El estado / certificado es ", _this.state);
+      });
     });
 
     _defineProperty(_assertThisInitialized(_this), "handleSubmit", function (e) {
       e.preventDefault();
       var cert = _this.state.cert;
+      console.log("El certificado es: ", _this.state);
 
       _this.addCert(cert);
     });
 
     _defineProperty(_assertThisInitialized(_this), "addCert", function (cert) {
       console.log("Enviando el cert: ", cert);
-      _Http__WEBPACK_IMPORTED_MODULE_2__["default"].post(_this.api, {
-        number: cert
-      }).then(function (_ref) {
+      _Http__WEBPACK_IMPORTED_MODULE_2__["default"].post(_this.api, cert).then(function (_ref) {
         var data = _ref.data;
-        var newItem = {
-          id: data.id,
-          number: cert
-        };
-        var allCerts = [newItem].concat(_toConsumableArray(_this.state.data));
 
         _this.setState({
-          data: allCerts,
-          cert: null
-        });
-
-        _this.certForm.reset();
-      })["catch"](function () {
+          cert: {},
+          "new": false
+        }, _this.reload());
+      })["catch"](function (e) {
         _this.setState({
           error: "Sorry, there was an error saving your to do."
         });
       });
     });
 
-    _defineProperty(_assertThisInitialized(_this), "closeCert", function (e) {
-      var key = e.target.dataset.key;
-      var certs = _this.state.data;
-      _Http__WEBPACK_IMPORTED_MODULE_2__["default"].patch("".concat(_this.api, "/").concat(key), {
-        status: "closed"
-      }).then(function () {
-        var updatedCerts = certs.filter(function (cert) {
-          return cert.id !== parseInt(key, 10);
-        });
-
-        _this.setState({
-          data: updatedCerts
-        });
-      })["catch"](function () {
-        _this.setState({
-          error: "Sorry, there was an error closing your to do."
-        });
-      });
-    });
-
     _this.state = {
-      cert: null,
+      cert: {},
       error: false,
-      data: []
+      data: [],
+      "new": false
     }; // API endpoint.
 
     _this.api = "/api/v1/cert";
+    _this.apiBase = "/api/v1";
     return _this;
   }
 
   _createClass(Dashboard, [{
     key: "componentDidMount",
     value: function componentDidMount() {
+      this.reload();
+    }
+  }, {
+    key: "reload",
+    value: function reload() {
       var _this2 = this;
 
       _Http__WEBPACK_IMPORTED_MODULE_2__["default"].get("".concat(this.api, "?status=open")).then(function (response) {
@@ -64089,6 +64066,12 @@ function (_Component) {
       });
     }
   }, {
+    key: "downloadCert",
+    value: function downloadCert(code) {
+      window.open("".concat(this.apiBase, "/pdf/generate/").concat(code), "_blank"); //to open new page
+      //Http.get(`${this.api}/pdf/generate/${key}`)
+    }
+  }, {
     key: "render",
     value: function render() {
       var _this3 = this;
@@ -64098,7 +64081,14 @@ function (_Component) {
           error = _this$state.error;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "container py-5"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, !this.state["new"] && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "btn btn-primary",
+        onClick: function onClick() {
+          _this3.setState({
+            "new": true
+          });
+        }
+      }, "Nuevo certificado"), this.state["new"] && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "add-certs mb-5"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
         className: "text-center mb-4"
@@ -64118,79 +64108,124 @@ function (_Component) {
         id: "addCert",
         name: "name",
         className: "form-control mr-3",
-        placeholder: "Build a To Do app...",
+        placeholder: "Nombre ...",
         onChange: this.handleChange
       }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-group"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         htmlFor: "addCert"
-      }, "N\xFAmero"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, "Documento identidad"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "d-flex"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         id: "addCert",
-        name: "number",
+        name: "document",
         className: "form-control mr-3",
-        placeholder: "Build a To Do app...",
+        placeholder: "Documento identidad ...",
         onChange: this.handleChange
       }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-group"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         htmlFor: "addCert"
-      }, "N\xFAmero"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, "Consecutivo"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "d-flex"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         id: "addCert",
         name: "number",
         className: "form-control mr-3",
-        placeholder: "Build a To Do app...",
+        placeholder: "Consecutivo ...",
         onChange: this.handleChange
       }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-group"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         htmlFor: "addCert"
-      }, "N\xFAmero"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, "Fecha inicio"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "d-flex"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         id: "addCert",
-        name: "number",
+        type: "date",
+        name: "startDate",
         className: "form-control mr-3",
-        placeholder: "Build a To Do app...",
+        placeholder: "Fecha de inicio ...",
         onChange: this.handleChange
       }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-group"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         htmlFor: "addCert"
-      }, "N\xFAmero"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, "Fecha final"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "d-flex"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         id: "addCert",
-        name: "number",
+        type: "date",
+        name: "endDate",
         className: "form-control mr-3",
-        placeholder: "Build a To Do app...",
+        placeholder: "Fecha final ...",
         onChange: this.handleChange
       }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        htmlFor: "addCert"
+      }, "Ciudad"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "d-flex"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+        id: "addCert",
+        name: "city",
+        className: "form-control mr-3",
+        onChange: this.handleChange
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        disabled: true,
+        selected: true
+      }, "Selecciona una opci\xF3n"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "Bogot\xE1"
+      }, "Bogot\xE1"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "Cali"
+      }, "Cali")))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        htmlFor: "addCert"
+      }, "Curso"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "d-flex"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+        id: "addCert",
+        name: "course",
+        className: "form-control mr-3",
+        onChange: this.handleChange
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        disabled: true,
+        selected: true
+      }, "Selecciona una opci\xF3n"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "4959/06-1724/07"
+      }, "CURSO ESPEC\xCDFICO EN TR\xC1NSITO Y SEGURIDAD VIAL PARA PERSONAL T\xC9CNICO Y/O AUXILIAR ACOMPA\xD1ANTE DE CARGA EXTRADIMENSIONADA")))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-group"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         type: "submit",
         className: "btn btn-primary"
-      }, "CREAR")))), error && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, "CREAR"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "btn btn-danger",
+        onClick: function onClick() {
+          _this3.setState({
+            "new": false
+          });
+        }
+      }, "Cancelar")))), error && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "alert alert-warning",
         role: "alert"
       }, error), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "certs"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
         className: "text-center mb-4"
-      }, "Open To Dos"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+      }, "Lista de certificados"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
         className: "table table-striped"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "To Do"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Action")), data.map(function (cert) {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Nombre"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Documento"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Consecutivo"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Fecha inicio"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Fecha fin"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Ciudad"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null)), data.map(function (cert) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
           key: cert.id
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, cert.number), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, cert.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, cert.document), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, cert.number), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, cert.startDate), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, cert.endDate), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, cert.city), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           type: "button",
           className: "btn btn-secondary",
-          onClick: _this3.closeCert,
-          "data-key": cert.id
-        }, "Close")));
+          onClick: function onClick() {
+            return _this3.downloadCert(cert.code);
+          },
+          "data-key": cert.code
+        }, "Descargar")));
       })))));
     }
   }]);
@@ -64760,11 +64795,7 @@ function (_Component) {
         className: classnames__WEBPACK_IMPORTED_MODULE_5___default()("btn btn-primary", {
           "btn-loading": loading
         })
-      }, "Ingresar"))))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "password-reset-link text-center"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
-        to: "/forgot-password"
-      }, "\xBFOlvid\xF3 su clave?")))))));
+      }, "Ingresar"))))))))));
     }
   }]);
 
@@ -66394,8 +66425,8 @@ var reducer = function reducer() {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/jag2kn/Documentos/jag2kn/Certificados/develop/laravel-react-bootstrap/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/jag2kn/Documentos/jag2kn/Certificados/develop/laravel-react-bootstrap/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/jag2kn/Documentos/Trabajo/Dados/Fenix/fenix-cert-backend/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/jag2kn/Documentos/Trabajo/Dados/Fenix/fenix-cert-backend/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

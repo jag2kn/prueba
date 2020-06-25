@@ -29,9 +29,13 @@ Route::group([
     'prefix' => 'v1'
 ], function ($router) {
     Route::apiResource('cert', 'CertController');
+    Route::get('pdf/generate/{id}','CertController@generatePDF');
 });
+
+
 
 // Not Found
 Route::fallback(function(){
     return response()->json(['message' => 'Resource not found.'], 404);
 });
+
