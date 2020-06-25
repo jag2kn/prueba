@@ -28,20 +28,14 @@ class Header extends Component {
         {this.props.isAuthenticated && (
           <div className="navigation d-flex justify-content-end">
             <Nav>
-              <NavItem>
-                <NavLink tag={Link} to="/archive">
-                  Archive
-                </NavLink>
-              </NavItem>
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>
-                  Account
+                  Usuario
                 </DropdownToggle>
                 <DropdownMenu right>
-                  <DropdownItem>Settings</DropdownItem>
                   <DropdownItem divider />
                   <DropdownItem onClick={this.handleLogout}>
-                    Log Out
+                    Salir
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
