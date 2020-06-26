@@ -59,7 +59,7 @@ class Dashboard extends Component {
     const { name, value } = e.target;
     let  { cert }  = this.state
     cert[name] = value
-    this.setState({ "cert": cert }, ()=>{console.log("El estado / certificado es ", this.state)});
+    this.setState({ "cert": cert });
   };
 
   handleSubmit = e => {
@@ -70,7 +70,14 @@ class Dashboard extends Component {
   };
 
   addCert = cert => {
-    console.log("Enviando el cert: ", cert)
+    if(cert.course===-1 || cert.course===""){
+      alert("Por favor seleccione un curso")
+      return
+    }
+    if(cert.city===-1 || cert.city===""){
+      alert("Por favor seleccione una ciudad")
+      return
+    }
     Http.post(this.api, cert)
       .then(({ data }) => {
         this.setState({cert: {}, new: false}, this.reload())
@@ -205,7 +212,7 @@ class Dashboard extends Component {
                     className="form-control mr-3"
                     onChange={this.handleChange}
                   >
-                    <option disabled selected>Selecciona una opción</option>
+                    <option value="-1" selected>Selecciona una opción</option>
                     <option value="Bogotá">Bogotá</option>
                     <option value="Cali">Cali</option>
                   </select>
@@ -222,7 +229,7 @@ class Dashboard extends Component {
                     className="form-control mr-3"
                     onChange={this.handleChange}
                   >
-                    <option disabled selected>Selecciona una opción</option>
+                    <option value="-1" selected>Selecciona una opción</option>
                     {this.state.courses.map((course, k)=>
                       <option key={k} value={course.id}>{course.name}</option>
                     )}

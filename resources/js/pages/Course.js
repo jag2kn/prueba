@@ -54,7 +54,6 @@ class Course extends Component {
   };
 
   addCourse = course => {
-    console.log("Enviando el course: ", course)
     Http.post(this.api, course)
       .then(({ data }) => {
         this.setState({course: {}, new: false}, this.reload())

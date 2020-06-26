@@ -54,7 +54,6 @@ class User extends Component {
   };
 
   addUser = user => {
-    console.log("Enviando el user: ", user)
     Http.post(this.api, user)
       .then(({ data }) => {
         this.setState({user: {}, new: false}, this.reload())
