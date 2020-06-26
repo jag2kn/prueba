@@ -12,6 +12,8 @@ class Dashboard extends Component {
       error: false,
       data: [],
       new: false,
+      edit: false,
+      courses: [],
     };
 
     // API endpoint.
@@ -22,13 +24,27 @@ class Dashboard extends Component {
   componentDidMount() {
     this.reload();
   }
-  
+
   reload(){
     Http.get(`${this.api}?status=open`)
       .then(response => {
         const { data } = response.data;
         this.setState({
           data,
+          error: false
+        });
+      })
+      .catch(() => {
+        this.setState({
+          error: "Unable to fetch data."
+        });
+      });
+    Http.get(`${this.apiBase}/course`)
+      .then(response => {
+        const { data } = response.data;
+        console.log("Los cursos son: ", data)
+        this.setState({
+          courses: data,
           error: false
         });
       })
@@ -58,7 +74,7 @@ class Dashboard extends Component {
     Http.post(this.api, cert)
       .then(({ data }) => {
         this.setState({cert: {}, new: false}, this.reload())
-        
+
       })
       .catch((e) => {
         this.setState({
@@ -72,18 +88,32 @@ class Dashboard extends Component {
     //Http.get(`${this.api}/pdf/generate/${key}`)
   };
 
+  deleteCert(cert){
+    if(confirm("¿Está seguro de eliminar el certificado?")){
+      Http.delete(this.api+"/"+cert.id)
+        .then(({ data }) => {
+          this.setState({course: {}, new: false, edit: false}, this.reload())
+        })
+        .catch((e) => {
+          this.setState({
+            error: "Sorry, there was an error saving your to do."
+          });
+        });
+    }
+  }
+
   render() {
     const { data, error } = this.state;
 
     return (
       <div className="container py-5">
         {!this.state.new &&
-          <button className="btn btn-primary" onClick={()=>{this.setState({new: true})}}>
+          <button className="btn btn-primary" onClick={()=>{this.setState({new: true, cert: {'name': "",'document': "",'number': "",'course': "",'startDate': "", 'endDate': "", 'city': "",}, edit: false})}}>
             Nuevo certificado
           </button>
         }
 
-        {this.state.new &&
+        {(this.state.new || this.state.edit) &&
           <div className="add-certs mb-5">
             <h1 className="text-center mb-4">Generar nuevo certificado</h1>
             <form
@@ -99,6 +129,7 @@ class Dashboard extends Component {
                   <input
                     id="addCert"
                     name="name"
+                    value={this.state.cert.name}
                     className="form-control mr-3"
                     placeholder="Nombre ..."
                     onChange={this.handleChange}
@@ -112,6 +143,7 @@ class Dashboard extends Component {
                   <input
                     id="addCert"
                     name="document"
+                    value={this.state.cert.document}
                     className="form-control mr-3"
                     placeholder="Documento identidad ..."
                     onChange={this.handleChange}
@@ -125,6 +157,7 @@ class Dashboard extends Component {
                   <input
                     id="addCert"
                     name="number"
+                    value={this.state.cert.number}
                     className="form-control mr-3"
                     placeholder="Consecutivo ..."
                     onChange={this.handleChange}
@@ -139,6 +172,7 @@ class Dashboard extends Component {
                     id="addCert"
                     type="date"
                     name="startDate"
+                    value={this.state.cert.startDate}
                     className="form-control mr-3"
                     placeholder="Fecha de inicio ..."
                     onChange={this.handleChange}
@@ -153,6 +187,7 @@ class Dashboard extends Component {
                     id="addCert"
                     type="date"
                     name="endDate"
+                    value={this.state.cert.endDate}
                     className="form-control mr-3"
                     placeholder="Fecha final ..."
                     onChange={this.handleChange}
@@ -166,6 +201,7 @@ class Dashboard extends Component {
                   <select
                     id="addCert"
                     name="city"
+                    value={this.state.cert.city}
                     className="form-control mr-3"
                     onChange={this.handleChange}
                   >
@@ -182,11 +218,14 @@ class Dashboard extends Component {
                   <select
                     id="addCert"
                     name="course"
+                    value={this.state.cert.course}
                     className="form-control mr-3"
                     onChange={this.handleChange}
                   >
                     <option disabled selected>Selecciona una opción</option>
-                    <option value="4959/06-1724/07">CURSO ESPECÍFICO EN TRÁNSITO Y SEGURIDAD VIAL PARA PERSONAL TÉCNICO Y/O AUXILIAR ACOMPAÑANTE DE CARGA EXTRADIMENSIONADA</option>
+                    {this.state.courses.map((course, k)=>
+                      <option key={k} value={course.id}>{course.name}</option>
+                    )}
                   </select>
                 </div>
               </div>
@@ -194,10 +233,17 @@ class Dashboard extends Component {
 
 
               <div className="form-group">
-                <button type="submit" className="btn btn-primary">
-                  CREAR
-                </button>
-                <button className="btn btn-danger" onClick={()=>{this.setState({new: false})}}>
+                {this.state.new &&
+                  <button type="submit" className="btn btn-primary">
+                    Crear certificado
+                  </button>
+                }
+                {this.state.edit &&
+                  <button className="btn btn-primary" onClick={(e)=>{this.updateCert(e)}}>
+                      Actualizar certificado
+                  </button>
+                }
+                <button className="btn btn-warning" onClick={()=>{this.setState({new: false})}}>
                   Cancelar
                 </button>
               </div>
@@ -222,7 +268,7 @@ class Dashboard extends Component {
                 <th>Fecha inicio</th>
                 <th>Fecha fin</th>
                 <th>Ciudad</th>
-                <th></th>
+                <th>Operaciones</th>
               </tr>
               {data.map(cert => (
                 <tr key={cert.id}>
@@ -240,6 +286,13 @@ class Dashboard extends Component {
                       data-key={cert.code}
                     >
                       Descargar
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-warning"
+                      onClick={()=>this.deleteCert(cert)}
+                    >
+                      Eliminar
                     </button>
                   </td>
                 </tr>

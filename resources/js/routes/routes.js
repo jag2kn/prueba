@@ -6,6 +6,8 @@ import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
 import Archive from "../pages/Archive";
 import NoMatch from "../pages/NoMatch";
+import User from "../pages/User";
+import Course from "../pages/Course";
 
 const routes = [
   {
@@ -44,6 +46,18 @@ const routes = [
     exact: true,
     auth: true,
     component: Archive
+  },
+  {
+    path: "/user",
+    exact: true,
+    auth: true,
+    component: User
+  },
+  {
+    path: "/course",
+    exact: true,
+    auth: true,
+    component: Course
   },
   {
     path: "",

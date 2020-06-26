@@ -28,6 +28,22 @@ class Header extends Component {
         {this.props.isAuthenticated && (
           <div className="navigation d-flex justify-content-end">
             <Nav>
+              <NavItem>
+                <NavLink tag={Link} to="/">
+                  Certificados
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={Link} to="/course">
+                  Cursos
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={Link} to="/user">
+                  Usuarios
+                </NavLink>
+              </NavItem>
+
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>
                   Usuario
