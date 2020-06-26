@@ -29,6 +29,8 @@ Route::group([
     'prefix' => 'v1'
 ], function ($router) {
     Route::apiResource('cert', 'CertController');
+    Route::apiResource('user', 'UserController');
+    Route::apiResource('course', 'CourseController');
     Route::get('pdf/generate/{id}','CertController@generatePDF');
 });
 

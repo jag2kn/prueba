@@ -10,6 +10,7 @@ use App\Http\Controllers\APIController;
 use App\Http\Resources\CertCollection;
 use App\Http\Resources\CertResource;
 use App\Cert;
+use App\Course;
 use QrCode;
 
 function generateRandomString($length = 10) {
@@ -23,11 +24,12 @@ function generateRandomString($length = 10) {
 }
 
 function getCourse($id){
-  $lista = [
-    "4959/06-1724/07" =>  "CURSO ESPECÍFICO EN TRÁNSITO Y SEGURIDAD VIAL PARA PERSONAL TÉCNICO Y/O AUXILIAR ACOMPAÑANTE DE CARGA EXTRADIMENSIONADA<br/>".
-                          "De acuerdo a las Resoluciones 4959/06 y 1724/07 de Mintransporte."
-  ];
-  return $lista[$id]; 
+  try {
+      $course = Course::where('id', $id)->firstOrFail();
+      return $course;
+  } catch (Exception $e) {
+      return $this->responseServerError('Error query resource.');
+  }
 }
 
 class CertController extends ApiController
@@ -156,18 +158,33 @@ class CertController extends ApiController
 
         try {
             $cert = Cert::where('id', $id)->firstOrFail();
-            if ($cert->user_id === $user->id) {
+            //if ($cert->user_id === $user->id) {
                 if (request('number')) {
                     $cert->number = request('number');
                 }
-                if (request('status')) {
-                    $cert->status = request('status');
+                if (request('name')) {
+                    $cert->name = request('name');
+                }
+                if (request('document')) {
+                    $cert->document = request('document');
+                }
+                if (request('course')) {
+                    $cert->name = request('course');
+                }
+                if (request('startDate')) {
+                    $cert->startDate = request('startDate');
+                }
+                if (request('endDate')) {
+                    $cert->endDate = request('endDate');
+                }
+                if (request('city')) {
+                    $cert->city = request('city');
                 }
                 $cert->save();
                 return $this->responseResourceUpdated();
-            } else {
-                return $this->responseUnauthorized();
-            }
+            //} else {
+            //    return $this->responseUnauthorized();
+            //}
         } catch (Exception $e) {
             return $this->responseServerError('Error updating resource.');
         }
@@ -189,9 +206,9 @@ class CertController extends ApiController
         $cert = Cert::where('id', $id)->firstOrFail();
 
         // User can only delete their own data.
-        if ($cert->user_id !== $user->id) {
-            return $this->responseUnauthorized();
-        }
+        //if ($cert->user_id !== $user->id) {
+        //    return $this->responseUnauthorized();
+        //}
 
         try {
             $cert->delete();
@@ -212,7 +229,7 @@ class CertController extends ApiController
         $pdf = app('dompdf.wrapper');
         $cert = Cert::where('code', $id)->first();
         
-        QrCode::color(255, 0, 0);
+        $course = getCourse($cert->course);
         
         
         $pdf->loadHTML(
@@ -222,9 +239,12 @@ class CertController extends ApiController
             '<h2>Certifican a:</h2>'.
             '<h1>'.$cert->name.'</h1>'.
             '<h1>'."CC ". $cert->document.'</h1>'.
-            '<h2>'.getCourse($cert->course).'</h2>'.
-            "<div>Curso tomado entre ".$cert->startDate." - ".$cert->endDate." en la ciudad de ".$cert->city."</div><br/>".
-            '<img src="data:image/png;base64, '.base64_encode(QrCode::format('png')->generate('Embed me into an e-mail!')).'"/>'.
+            '<h2>'.$course->name.'<br/>'.$course->description.'</h2>'.
+            "<div>Curso tomado entre ".$cert->startDate." y ".$cert->endDate." en la ciudad de ".$cert->city."</div><br/>".
+            "Url de validación: ".url()->current()."<br/>".
+            '<img src="data:image/png;base64, '.
+              base64_encode(
+                QrCode::color(120, 14, 14)->format('png')->generate(url()->current())).'"/>'.
           '</div>'
         )->setPaper('letter', 'landscape');
         return $pdf->stream('cert.pdf');
