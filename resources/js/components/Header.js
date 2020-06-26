@@ -43,21 +43,27 @@ class Header extends Component {
                   Usuarios
                 </NavLink>
               </NavItem>
-
-              <UncontrolledDropdown nav inNavbar>
-                <DropdownToggle nav caret>
-                  Usuario
-                </DropdownToggle>
-                <DropdownMenu right>
-                  <DropdownItem divider />
-                  <DropdownItem onClick={this.handleLogout}>
-                    Salir
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
+              <NavItem>
+                <NavLink tag={Link} onClick={this.handleLogout}>
+                  Salir
+                </NavLink>
+              </NavItem>
             </Nav>
           </div>
         )}
+        {!this.props.isAuthenticated && (
+          <div className="navigation d-flex justify-content-end">
+            <Nav>
+              <NavItem>
+                <NavLink tag={Link} to="/login">
+                  Ingresar
+                </NavLink>
+              </NavItem>
+            </Nav>
+          </div>
+        )}
+
+
       </header>
     );
   }

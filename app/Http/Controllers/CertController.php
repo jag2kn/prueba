@@ -41,12 +41,18 @@ class CertController extends ApiController
      */
     public function index(Request $request)
     {
-        // Get user from $request token.
-        if (! $user = auth()->setRequest($request)->user()) {
-            return $this->responseUnauthorized();
+        $collection = Cert::with('user');
+
+        $document = $request->query('document');
+        if (!$document) {
+          // Get user from $request token.
+          if (! $user = auth()->setRequest($request)->user()) {
+              return $this->responseUnauthorized();
+          }
+        }else{
+            $collection = $collection->where('document', $document);
         }
 
-        $collection = Cert::with('user');
 
         // Check query string filters.
         if ($status = $request->query('status')) {

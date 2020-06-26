@@ -5,6 +5,7 @@ import { Link, Redirect } from "react-router-dom";
 import ReeValidate from "ree-validate";
 import classNames from "classnames";
 import AuthService from "../services";
+import ValidateCert from "../components/ValidateCert";
 
 class Home extends Component {
   constructor() {
@@ -106,101 +107,16 @@ class Home extends Component {
       <div>
         <div className="d-flex flex-column flex-md-row align-items-md-center py-5">
           <div className="container">
+            <div className="section-about col-lg-12 mb-12 mb-lg-12">
+              <img src="/imgs/logo.png"/>
+              <h2>Centro de enseñanza automovilistica</h2>
+            </div>
+            <br/>
             <div className="row">
-              <div className="section-about col-lg-6 mb-4 mb-lg-0">
-                <div>
-                  <img src="/imgs/logo.png"/>
-                  <h2>Centro de enseñanza automovilistica</h2>
-                  <p>
-                    Página de administración de certificados
-                  </p>
-                </div>
+              <div className="section-validate col-12">
+                <ValidateCert />
               </div>
-              <div className="section-login col-lg-6">
-                <h4>Ingreso a la aplicación</h4>
-
-                <div className="card-login card mb-3">
-                  <div className="card-body">
-                    <form
-                      className="form-horizontal"
-                      method="POST"
-                      onSubmit={this.handleSubmit}
-                      ref={el => {
-                        this.loginForm = el;
-                      }}
-                    >
-                      {response.error && (
-                        <div className="alert alert-danger" role="alert">
-                          Usuario o clave incorrecto, intente de nuevo
-                        </div>
-                      )}
-
-                      <div className="form-group">
-                        <label htmlFor="email">Correo electrónico</label>
-                        <input
-                          id="email"
-                          type="email"
-                          name="email"
-                          className={classNames("form-control", {
-                            "is-invalid": "email" in errors
-                          })}
-                          placeholder="Ingrese el correo"
-                          required
-                          onChange={this.handleChange}
-                          onBlur={this.handleBlur}
-                          disabled={loading}
-                        />
-
-                        {"email" in errors && (
-                          <div className="invalid-feedback">{errors.email}</div>
-                        )}
-                      </div>
-
-                      <div className="form-group">
-                        <label htmlFor="password">Clave</label>
-                        <input
-                          id="password"
-                          type="password"
-                          className={classNames("form-control", {
-                            "is-invalid": "password" in errors
-                          })}
-                          name="password"
-                          placeholder="Ingrese la clave"
-                          required
-                          onChange={this.handleChange}
-                          onBlur={this.handleBlur}
-                          disabled={loading}
-                        />
-                        {"password" in errors && (
-                          <div className="invalid-feedback">
-                            {errors.password}
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="form-group text-center">
-                        <button
-                          type="submit"
-                          className={classNames("btn btn-primary", {
-                            "btn-loading": loading
-                          })}
-                        >
-                          Ingresar
-                        </button>
-                      </div>
-
-                      {/*<div className="login-invite-text text-center">
-                        {"Don't have an account?"}{" "}
-                        <Link to="/register">Register</Link>.
-                      </div>*/}
-                    </form>
-                  </div>
-                </div>
-
-                {/* <div className="password-reset-link text-center">
-                  <Link to="/forgot-password">¿Olvidó su clave?</Link>
-                </div> */}
-              </div>
+              
             </div>
           </div>
         </div>

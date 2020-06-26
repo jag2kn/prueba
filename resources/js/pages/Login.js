@@ -111,19 +111,11 @@ class Login extends Component {
           <div className="container">
             <div className="row">
               <div className="section-login col-lg-6 ml-auto mr-auto">
-                <h4>Log in to the App</h4>
+
+                <h4>Ingreso a la aplicación</h4>
 
                 <div className="card-login card mb-3">
                   <div className="card-body">
-                    {response.error && (
-                      <div
-                        className="alert alert-danger text-center"
-                        role="alert"
-                      >
-                        Credentials were incorrect. Try again!
-                      </div>
-                    )}
-
                     <form
                       className="form-horizontal"
                       method="POST"
@@ -132,8 +124,14 @@ class Login extends Component {
                         this.loginForm = el;
                       }}
                     >
+                      {response.error && (
+                        <div className="alert alert-danger" role="alert">
+                          Usuario o clave incorrecto, intente de nuevo
+                        </div>
+                      )}
+
                       <div className="form-group">
-                        <label htmlFor="email">Email Address</label>
+                        <label htmlFor="email">Correo electrónico</label>
                         <input
                           id="email"
                           type="email"
@@ -141,7 +139,7 @@ class Login extends Component {
                           className={classNames("form-control", {
                             "is-invalid": "email" in errors
                           })}
-                          placeholder="Enter email"
+                          placeholder="Ingrese el correo"
                           required
                           onChange={this.handleChange}
                           onBlur={this.handleBlur}
@@ -154,7 +152,7 @@ class Login extends Component {
                       </div>
 
                       <div className="form-group">
-                        <label htmlFor="password">Password</label>
+                        <label htmlFor="password">Clave</label>
                         <input
                           id="password"
                           type="password"
@@ -162,7 +160,7 @@ class Login extends Component {
                             "is-invalid": "password" in errors
                           })}
                           name="password"
-                          placeholder="Enter password"
+                          placeholder="Ingrese la clave"
                           required
                           onChange={this.handleChange}
                           onBlur={this.handleBlur}
@@ -182,26 +180,21 @@ class Login extends Component {
                             "btn-loading": loading
                           })}
                         >
-                          Sign In
+                          Ingresar
                         </button>
                       </div>
 
-                      <div className="login-invite-text text-center">
-                        No account?{" "}
-                        <Link to="/register" href="/register">
-                          Register
-                        </Link>
-                        .
-                      </div>
+                      {/*<div className="login-invite-text text-center">
+                        {"Don't have an account?"}{" "}
+                        <Link to="/register">Register</Link>.
+                      </div>*/}
                     </form>
                   </div>
                 </div>
 
-                <div className="password-reset-link text-center">
-                  <Link to="/forgot-password" href="/forgot-password">
-                    Forgot Your Password?
-                  </Link>
-                </div>
+                {/* <div className="password-reset-link text-center">
+                  <Link to="/forgot-password">¿Olvidó su clave?</Link>
+                </div> */}
               </div>
             </div>
           </div>
