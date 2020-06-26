@@ -227,26 +227,30 @@ class CertController extends ApiController
     public function generatePDF(Request $request, $id)
     {
         $pdf = app('dompdf.wrapper');
-        $cert = Cert::where('code', $id)->first();
-        
-        $course = getCourse($cert->course);
-        
-        
-        $pdf->loadHTML(
-          '<div style="text-align:center;">'.
-            '<img src="'.base_path().'/public/imgs/logo.png" alt="Logo" height="150px">'.
-            '<h1>Centro de Enseñanza Automovilística FENIX BOGOTA,<br/>y EXCELSIOR SECURITAS LABORUM S.A.S.</h1>'.
-            '<h2>Certifican a:</h2>'.
-            '<h1>'.$cert->name.'</h1>'.
-            '<h1>'."CC ". $cert->document.'</h1>'.
-            '<h2>'.$course->name.'<br/>'.$course->description.'</h2>'.
-            "<div>Curso tomado entre ".$cert->startDate." y ".$cert->endDate." en la ciudad de ".$cert->city."</div><br/>".
-            "Url de validación: ".url()->current()."<br/>".
-            '<img src="data:image/png;base64, '.
-              base64_encode(
-                QrCode::color(120, 14, 14)->format('png')->generate(url()->current())).'"/>'.
-          '</div>'
-        )->setPaper('letter', 'landscape');
-        return $pdf->stream('cert.pdf');
+        try{
+          $cert = Cert::where('code', $id)->firstOrFail();
+          
+          $course = getCourse($cert->course);
+          
+          
+          $pdf->loadHTML(
+            '<div style="text-align:center;">'.
+              '<img src="'.base_path().'/public/imgs/logo.png" alt="Logo" height="150px">'.
+              '<h1>Centro de Enseñanza Automovilística FENIX BOGOTA,<br/>y EXCELSIOR SECURITAS LABORUM S.A.S.</h1>'.
+              '<h2>Certifican a:</h2>'.
+              '<h1>'.$cert->name.'</h1>'.
+              '<h1>'."CC ". $cert->document.'</h1>'.
+              '<h2>'.$course->name.'<br/>'.$course->description.'</h2>'.
+              "<div>Curso tomado entre ".$cert->startDate." y ".$cert->endDate." en la ciudad de ".$cert->city."</div><br/>".
+              "Url de validación: ".url()->current()."<br/>".
+              '<img src="data:image/png;base64, '.
+                base64_encode(
+                  QrCode::color(120, 14, 14)->format('png')->generate(url()->current())).'"/>'.
+            '</div>'
+          )->setPaper('letter', 'landscape');
+          return $pdf->stream('cert.pdf');
+        }catch (Exception $e) {
+            return $this->responseServerError('Certificado inexistente.');
+        }
     }
 }
