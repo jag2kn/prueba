@@ -122,7 +122,6 @@ class ValidateCert extends Component {
                 <th>Fecha inicio</th>
                 <th>Fecha fin</th>
                 <th>Ciudad</th>
-                <th>Operaciones</th>
               </tr>
               {data.map(cert => (
                 <tr key={cert.id}>
@@ -132,16 +131,6 @@ class ValidateCert extends Component {
                   <td>{cert.startDate}</td>
                   <td>{cert.endDate}</td>
                   <td>{cert.city}</td>
-                  <td>
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      onClick={()=>this.downloadCert(cert.code)}
-                      data-key={cert.code}
-                    >
-                      Ver certificado
-                    </button>
-                  </td>
                 </tr>
               ))}
             </tbody>
