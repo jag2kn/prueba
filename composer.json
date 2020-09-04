@@ -1,6 +1,6 @@
 {
-    "name": "fenix-certificados/fenix-cert",
-    "description": "Plataforma de administración de certificados para Fenix Bogotá.",
+    "name": "prueba-laravel",
+    "description": "Prueba laravel",
     "license": "MIT",
     "type": "project",
     "require": {

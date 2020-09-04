@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Course extends Model
+class Company extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -12,7 +12,7 @@ class Course extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'description'
+        'name', 'email', 'logo', 'website'
     ];
 
 }

@@ -7,7 +7,8 @@ import ResetPassword from "../pages/ResetPassword";
 import Archive from "../pages/Archive";
 import NoMatch from "../pages/NoMatch";
 import User from "../pages/User";
-import Course from "../pages/Course";
+import Employee from "../pages/Employee";
+import Company from "../pages/Company";
 
 const routes = [
   {
@@ -54,10 +55,16 @@ const routes = [
     component: User
   },
   {
-    path: "/course",
+    path: "/company",
     exact: true,
     auth: true,
-    component: Course
+    component: Company
+  },
+  {
+    path: "/employee",
+    exact: true,
+    auth: true,
+    component: Employee
   },
   {
     path: "",

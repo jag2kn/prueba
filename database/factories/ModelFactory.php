@@ -14,18 +14,34 @@ use Illuminate\Support\Str;
 |
 */
 
+//https://github.com/fzaninotto/Faker
+
 $factory->define(App\User::class, function (Faker $faker) {
     return [
-        'name' => $faker->name,
+        'name' => $faker->userName,
         'email' => $faker->unique()->safeEmail,
-        'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
-        'remember_token' => Str::random(10),
+        'password' => bcrypt($faker->password),
     ];
 });
 
-$factory->define(App\Todo::class, function (Faker $faker) {
+
+$factory->define(App\Company::class, function (Faker $faker) {
     return [
-        'value' => $faker->sentence(6),
-        'status' => $faker->randomElement(['open', 'closed'])
+        'name' => $faker->company,
+        'email' => $faker->unique()->safeEmail,
+        'logo' => $faker->imageUrl(100, 100, 'cats'),
+        'website' => $faker->url,
     ];
 });
+
+
+$factory->define(App\Employee::class, function (Faker $faker) {
+    return [
+        'name' => $faker->firstName,
+        'lastName' => $faker->lastName,
+        'email' => $faker->unique()->safeEmail,
+        'phone' => $faker->e164PhoneNumber,
+        'company_id' => 1+$faker->randomDigit,
+    ];
+});
+

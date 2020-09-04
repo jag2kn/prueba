@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use App\Http\Resources\ApiResouce;
 use App\Custom\Hasher;
 
-class CourseResource extends ApiResource
+class EmployeeResource extends ApiResource
 {
     /**
      * Transform the resource into an array.
@@ -17,8 +17,11 @@ class CourseResource extends ApiResource
     {
         return [
             'id' => $this->id,
+            'company' => $this->company_id,
             'name' => $this->name,
-            'description' => $this->description,
+            'lastName' => $this->lastName,
+            'email' => $this->email,
+            'phone' => $this->phone,
             'created_at' => (string)$this->created_at->toDateTimeString(),
             'updated_at' => (string)$this->updated_at->toDateTimeString(),
         ];

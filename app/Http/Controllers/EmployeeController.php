@@ -7,32 +7,13 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use App\Custom\Hasher;
 use App\Http\Controllers\APIController;
-use App\Http\Resources\CertCollection;
-use App\Http\Resources\CertResource;
-use App\Cert;
-use App\Course;
-use QrCode;
+use App\Http\Resources\EmployeeCollection;
+use App\Http\Resources\EmployeeResource;
+use App\Employee;
+use App\Company;
 
-function generateRandomString($length = 10) {
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $charactersLength = strlen($characters);
-    $randomString = '';
-    for ($i = 0; $i < $length; $i++) {
-        $randomString .= $characters[rand(0, $charactersLength - 1)];
-    }
-    return $randomString;
-}
 
-function getCourse($id){
-  try {
-      $course = Course::where('id', $id)->firstOrFail();
-      return $course;
-  } catch (Exception $e) {
-      return $this->responseServerError('Error query resource.');
-  }
-}
-
-class CertController extends ApiController
+class EmployeeController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -41,7 +22,21 @@ class CertController extends ApiController
      */
     public function index(Request $request)
     {
-        $collection = Cert::with('user');
+    
+        // Get company from $request token.
+        if (! $user = auth()->setRequest($request)->user()) {
+            return $this->responseUnauthorized();
+        }
+
+        $collection = new Employee();
+
+        // Check query string filters.
+
+        $collection = $collection->latest()->paginate();
+
+        return new EmployeeCollection($collection);
+      /*
+        $collection = Employee::with('company');
 
         $document = $request->query('document');
         if (!$document) {
@@ -68,7 +63,7 @@ class CertController extends ApiController
             $collection = $collection->appends('status', $status);
         }
 
-        return new CertCollection($collection);
+        return new EmployeeCollection($collection);*/
     }
 
     /**
@@ -86,7 +81,8 @@ class CertController extends ApiController
 
         // Validate all the required parameters have been sent.
         $validator = Validator::make($request->all(), [
-            'number' => 'required',
+            'name' => 'required',
+            'lastName' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -95,21 +91,17 @@ class CertController extends ApiController
 
         // Warning: Data isn't being fully sanitized yet.
         try {
-            $cert = Cert::create([
-                'user_id' => $user->id,
-                'number' => request('number'),
+            $employee = Employee::create([
+                'company_id' => request('company_id'),
                 'name' => request('name'),
-                'document' => request('document'),
-                'course' => request('course'),
-                'startDate' => request('startDate'),
-                'endDate' => request('endDate'),
-                'city' => request('city'),
-                'code' => generateRandomString(20),
+                'lastName' => request('lastName'),
+                'email' => request('email'),
+                'phone' => request('phone'),
             ]);
             return response()->json([
                 'status' => 201,
                 'message' => 'Resource created.',
-                'id' => $cert->id
+                'id' => $employee->id
             ], 201);
         } catch (Exception $e) {
             return $this->responseServerError('Error creating resource.');
@@ -129,13 +121,9 @@ class CertController extends ApiController
             return $this->responseUnauthorized();
         }
 
-        // User can only acccess their own data.
-        if ($cert->user_id === $user->id) {
-            return $this->responseUnauthorized();
-        }
 
-        $cert = Cert::where('id', $id)->firstOrFail();
-        return new CertResource($cert);
+        $employee = Employee::where('id', $id)->firstOrFail();
+        return new EmployeeResource($employee);
     }
 
     /**
@@ -154,8 +142,8 @@ class CertController extends ApiController
 
         // Validates data.
         $validator = Validator::make($request->all(), [
-            'number' => 'string',
-            'status' => 'in:closed,open',
+            'name' => 'required',
+            'lastName' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -163,30 +151,21 @@ class CertController extends ApiController
         }
 
         try {
-            $cert = Cert::where('id', $id)->firstOrFail();
-            //if ($cert->user_id === $user->id) {
-                if (request('number')) {
-                    $cert->number = request('number');
-                }
+            $employee = Employee::where('id', $id)->firstOrFail();
+            //if ($employee->user_id === $user->id) {
                 if (request('name')) {
-                    $cert->name = request('name');
+                    $employee->name = request('name');
                 }
-                if (request('document')) {
-                    $cert->document = request('document');
+                if (request('lastName')) {
+                    $employee->lastName = request('lastName');
                 }
-                if (request('course')) {
-                    $cert->name = request('course');
+                if (request('phone')) {
+                    $employee->phone = request('phone');
                 }
-                if (request('startDate')) {
-                    $cert->startDate = request('startDate');
+                if (request('email')) {
+                    $employee->email = request('email');
                 }
-                if (request('endDate')) {
-                    $cert->endDate = request('endDate');
-                }
-                if (request('city')) {
-                    $cert->city = request('city');
-                }
-                $cert->save();
+                $employee->save();
                 return $this->responseResourceUpdated();
             //} else {
             //    return $this->responseUnauthorized();
@@ -209,54 +188,19 @@ class CertController extends ApiController
             return $this->responseUnauthorized();
         }
 
-        $cert = Cert::where('id', $id)->firstOrFail();
+        $employee = Employee::where('id', $id)->firstOrFail();
 
         // User can only delete their own data.
-        //if ($cert->user_id !== $user->id) {
+        //if ($employee->user_id !== $user->id) {
         //    return $this->responseUnauthorized();
         //}
 
         try {
-            $cert->delete();
+            $employee->delete();
             return $this->responseResourceDeleted();
         } catch (Exception $e) {
             return $this->responseServerError('Error deleting resource.');
         }
     }
-    
-    /**
-     * Generate pdf
-     *
-     * @param  string  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function generatePDF(Request $request, $id)
-    {
-        $pdf = app('dompdf.wrapper');
-        try{
-          $cert = Cert::where('code', $id)->firstOrFail();
-          
-          $course = getCourse($cert->course);
-          
-          
-          $pdf->loadHTML(
-            '<div style="text-align:center;">'.
-              '<img src="'.base_path().'/public/imgs/logo.png" alt="Logo" height="150px">'.
-              '<h1>Centro de Enseñanza Automovilística FENIX BOGOTA,<br/>y EXCELSIOR SECURITAS LABORUM S.A.S.</h1>'.
-              '<h2>Certifican a:</h2>'.
-              '<h1>'.$cert->name.'</h1>'.
-              '<h1>'."CC ". $cert->document.'</h1>'.
-              '<h2>'.$course->name.'<br/>'.$course->description.'</h2>'.
-              "<div>Curso tomado entre ".$cert->startDate." y ".$cert->endDate." en la ciudad de ".$cert->city."</div><br/>".
-              "Url de validación: ".url()->current()."<br/>".
-              '<img src="data:image/png;base64, '.
-                base64_encode(
-                  QrCode::color(120, 14, 14)->format('png')->generate(url()->current())).'"/>'.
-            '</div>'
-          )->setPaper('letter', 'landscape');
-          return $pdf->stream('cert.pdf');
-        }catch (Exception $e) {
-            return $this->responseServerError('Certificado inexistente.');
-        }
-    }
+
 }

@@ -22,7 +22,10 @@ class Header extends Component {
     return (
       <header className="d-flex align-items-center justify-content-between">
         <h1 className="logo my-0 font-weight-normal h4">
-          <Link to="/"><img src="/imgs/logo.png"/></Link>
+          <Link to="/">
+            <img src="https://lorempixel.com/50/50/cats/?41966"/>
+            Gatosoft
+          </Link>
         </h1>
 
         {this.props.isAuthenticated && (
@@ -30,17 +33,17 @@ class Header extends Component {
             <Nav>
               <NavItem>
                 <NavLink tag={Link} to="/">
-                  Certificados
+                  Inicio
                 </NavLink>
               </NavItem>
               <NavItem>
-                <NavLink tag={Link} to="/course">
-                  Cursos
+                <NavLink tag={Link} to="/company">
+                  Compañias
                 </NavLink>
               </NavItem>
               <NavItem>
-                <NavLink tag={Link} to="/user">
-                  Usuarios
+                <NavLink tag={Link} to="/employee">
+                  Empleados
                 </NavLink>
               </NavItem>
               <NavItem>

@@ -5,14 +5,14 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\User;
 
-class Cert extends Model
+class Employee extends Model
 {
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */    
-    protected $fillable = ['name','document','number','course','startDate', 'endDate', 'city', 'status', 'user_id', 'code'];
+    protected $fillable = ['name','lastName','email','phone','company_id'];
     
     
     /**
@@ -21,7 +21,7 @@ class Cert extends Model
      * @var array
      */
     protected $casts = [
-        'user_id' => 'integer',
+        'company_id' => 'integer',
     ];
 
     /**
@@ -29,8 +29,8 @@ class Cert extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user()
+    public function company()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(Company::class, 'company_id');
     }
 }

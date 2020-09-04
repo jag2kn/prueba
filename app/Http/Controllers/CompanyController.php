@@ -8,11 +8,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Custom\Hasher;
 use App\Http\Controllers\APIController;
-use App\Http\Resources\CourseCollection;
-use App\Http\Resources\CourseResource;
-use App\Course;
+use App\Http\Resources\CompanyCollection;
+use App\Http\Resources\CompanyResource;
+use App\Company;
 
-class CourseController extends ApiController
+class CompanyController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -21,18 +21,18 @@ class CourseController extends ApiController
      */
     public function index(Request $request)
     {
-        // Get course from $request token.
+        // Get company from $request token.
         if (! $user = auth()->setRequest($request)->user()) {
             return $this->responseUnauthorized();
         }
 
-        $collection = new Course();
+        $collection = new Company();
 
         // Check query string filters.
 
         $collection = $collection->latest()->paginate();
 
-        return new CourseCollection($collection);
+        return new CompanyCollection($collection);
     }
 
     /**
@@ -43,7 +43,7 @@ class CourseController extends ApiController
      */
     public function store(Request $request)
     {
-        // Get course from $request token.
+        // Get company from $request token.
         if (! $user = auth()->setRequest($request)->user()) {
             return $this->responseUnauthorized();
         }
@@ -51,7 +51,6 @@ class CourseController extends ApiController
         // Validate all the required parameters have been sent.
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'description' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -60,14 +59,16 @@ class CourseController extends ApiController
 
         // Warning: Data isn't being fully sanitized yet.
         try {
-            $course = Course::create([
+            $company = Company::create([
                 'name' => request('name'),
-                'description' => request('description'),
+                'email' => request('email'),
+                'logo' => request('logo'),
+                'website' => request('website'),
             ]);
             return response()->json([
                 'status' => 201,
                 'message' => 'Resource created.',
-                'id' => $course->id
+                'id' => $company->id
             ], 201);
         } catch (Exception $e) {
             return $this->responseServerError('Error creating resource.');
@@ -82,13 +83,13 @@ class CourseController extends ApiController
      */
     public function show($id)
     {
-        // Get course from $request token.
+        // Get company from $request token.
         if (! $user = auth()->setRequest($request)->user()) {
             return $this->responseUnauthorized();
         }
 
-        $course = Course::where('id', $id)->firstOrFail();
-        return new CourseResource($course);
+        $company = Company::where('id', $id)->firstOrFail();
+        return new CompanyResource($company);
     }
 
     /**
@@ -106,8 +107,7 @@ class CourseController extends ApiController
 
         // Validates data.
         $validator = Validator::make($request->all(), [
-            'name' => 'string',
-            'description' => 'string',
+            'name' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -115,14 +115,20 @@ class CourseController extends ApiController
         }
 
         try {
-            $course = Course::where('id', $id)->firstOrFail();
+            $company = Company::where('id', $id)->firstOrFail();
             if (request('name')) {
-                $course->name = request('name');
+                $company->name = request('name');
             }
-            if (request('description')) {
-                $course->description = request('description');
+            if (request('email')) {
+                $company->email = request('email');
             }
-            $course->save();
+            if (request('logo')) {
+                $company->logo = request('logo');
+            }
+            if (request('website')) {
+                $company->website = request('website');
+            }
+            $company->save();
             return $this->responseResourceUpdated();
         } catch (Exception $e) {
             return $this->responseServerError('Error updating resource.');
@@ -137,15 +143,15 @@ class CourseController extends ApiController
      */
     public function destroy(Request $request, $id)
     {
-        // Get course from $request token.
+        // Get company from $request token.
         if (! $user = auth()->setRequest($request)->user()) {
             return $this->responseUnauthorized();
         }
 
-        $course = Course::where('id', $id)->firstOrFail();
+        $company = Company::where('id', $id)->firstOrFail();
 
         try {
-            $course->delete();
+            $company->delete();
             return $this->responseResourceDeleted();
         } catch (Exception $e) {
             return $this->responseServerError('Error deleting resource.');

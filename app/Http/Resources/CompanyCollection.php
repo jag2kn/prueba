@@ -2,11 +2,11 @@
 
 namespace App\Http\Resources;
 
-use App\Cert;
+use App\Company;
 use App\Http\Resources\ApiResourceCollection;
-use App\Http\Resources\CertResource;
+use App\Http\Resources\CompanyResource;
 
-class CertCollection extends ApiResourceCollection
+class CompanyCollection extends ApiResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -16,9 +16,9 @@ class CertCollection extends ApiResourceCollection
      */
     public function toArray($request)
     {
-        // Transforms the collection to match format in CertResource.
-        $this->collection->transform(function (Cert $cert) {
-            return (new CertResource($cert));
+        // Transforms the collection to match format in CompanyResource.
+        $this->collection->transform(function (Company $company) {
+            return (new CompanyResource($company));
         });
 
         return parent::toArray($request);

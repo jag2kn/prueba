@@ -2,11 +2,11 @@
 
 namespace App\Http\Resources;
 
-use App\Course;
+use App\Employee;
 use App\Http\Resources\ApiResourceCollection;
-use App\Http\Resources\CourseResource;
+use App\Http\Resources\EmployeeResource;
 
-class CourseCollection extends ApiResourceCollection
+class EmployeeCollection extends ApiResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -16,9 +16,9 @@ class CourseCollection extends ApiResourceCollection
      */
     public function toArray($request)
     {
-        // Transforms the collection to match format in CourseResource.
-        $this->collection->transform(function (Course $course) {
-            return (new CourseResource($course));
+        // Transforms the collection to match format in EmployeeResource.
+        $this->collection->transform(function (Employee $employee) {
+            return (new EmployeeResource($employee));
         });
 
         return parent::toArray($request);

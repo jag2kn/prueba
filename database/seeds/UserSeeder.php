@@ -13,20 +13,14 @@ class UserSeeder extends Seeder
     {
         // Create primary user account for testing.
         User::create([
-            'name' => 'Jorge González',
-            'email' => 'jag2kn@gmail.com',
-            'password' => bcrypt('123456789')
+            'name' => 'Admin',
+            'email' => 'admin@admin.com',
+            'password' => bcrypt('contraseña')
         ]);
-        
-        User::create([
-            'name' => 'Camilo Correal',
-            'email' => 'camilo.correal@dadosgroup.com',
-            'password' => bcrypt('123456789')
-        ]);
-
         // Create another five user accounts.
-        //factory(User::class, 5)->create();
-
+        factory(User::class, 5)->create();
+        //factory(App\User::class, 5)->make());
+        
         $this->command->info('Users table seeded.');
     }
 }

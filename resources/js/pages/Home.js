@@ -108,16 +108,9 @@ class Home extends Component {
         <div className="d-flex flex-column flex-md-row align-items-md-center py-5">
           <div className="container">
             <div className="section-about col-lg-12 mb-12 mb-lg-12">
-              <img src="/imgs/logo.png"/>
-              <h2>Centro de enseñanza automovilistica</h2>
+              <h2>Prueba Laravel</h2>
             </div>
             <br/>
-            <div className="row">
-              <div className="section-validate col-12">
-                <ValidateCert />
-              </div>
-              
-            </div>
           </div>
         </div>
       </div>

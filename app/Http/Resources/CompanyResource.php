@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use App\Http\Resources\ApiResouce;
 use App\Custom\Hasher;
 
-class CertResource extends ApiResource
+class CompanyResource extends ApiResource
 {
     /**
      * Transform the resource into an array.
@@ -17,16 +17,10 @@ class CertResource extends ApiResource
     {
         return [
             'id' => $this->id,
-            'user' => $this->user_id,
             'name' => $this->name,
-            'document' => $this->document,
-            'number' => $this->number,
-            'course' => $this->course,
-            'startDate' => $this->startDate,
-            'endDate' => $this->endDate,
-            'city' => $this->city,
-            'code' => $this->code,
-            'status' => $this->status,
+            'email' => $this->email,
+            'logo' => $this->logo,
+            'website' => $this->website,
             'created_at' => (string)$this->created_at->toDateTimeString(),
             'updated_at' => (string)$this->updated_at->toDateTimeString(),
         ];
